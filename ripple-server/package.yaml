@@ -9,13 +9,27 @@ ghc-options:
 - -Widentities
 - -Wincomplete-record-updates
 - -Wincomplete-uni-patterns
-- -Wmissing-export-lists
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
 
 library:
   source-dirs: src
+  dependencies:
+  - aeson
+  - autodocodec
+  - genvalidity
+  - monad-logger
+  - mtl
+  - persistent
+  - persistent-sqlite
+  - persistent-template
+  - servant
+  - servant-client
+  - servant-server
+  - wai
+  - wai-extra
+  - warp
 
 executables:
   ripple-server:
