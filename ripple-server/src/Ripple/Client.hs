@@ -3,13 +3,14 @@
 
 module Ripple.Client where
 
+import Data.Coordinates
 import Ripple.API
 import Servant.API
 import Servant.Client
 
-clientUploadRipple :: ClientM NoContent
-clientListRipples :: ClientM [RippleSummary]
-clientReRipple :: ClientM NoContent
+clientUploadRipple :: Coordinates -> ClientM NoContent
+clientListRipples :: Coordinates -> ClientM [RippleSummary]
+clientReRipple :: Coordinates -> ClientM NoContent
 clientUploadRipple
   :<|> clientListRipples
   :<|> clientReRipple = client rippleAPI

@@ -16,17 +16,23 @@ ghc-options:
 library:
   source-dirs: src
   dependencies:
+  - QuickCheck
   - aeson
   - autodocodec
+  - deepseq
   - genvalidity
+  - hashable
   - monad-logger
   - mtl
+  - path-pieces
+  - text
   - persistent
   - persistent-sqlite
   - persistent-template
   - servant
   - servant-client
   - servant-server
+  - validity
   - wai
   - wai-extra
   - warp
@@ -52,5 +58,9 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - genvalidity-sydtest
+    - genvalidity-sydtest-aeson
+    - genvalidity-sydtest-persistent
+    - path-pieces
     - ripple-server
     - sydtest

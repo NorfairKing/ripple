@@ -7,6 +7,7 @@ module Ripple.API where
 
 import Autodocodec
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Coordinates
 import Data.Proxy
 import Servant.API
 
@@ -18,11 +19,11 @@ type RippleAPI =
     :<|> ListRipples
     :<|> ReRipple
 
-type UploadRipple = PostNoContent
+type UploadRipple = ReqBody '[JSON] Coordinates :> PostNoContent
 
-type ListRipples = Get '[JSON] [RippleSummary]
+type ListRipples = ReqBody '[JSON] Coordinates :> Get '[JSON] [RippleSummary]
 
-type ReRipple = PostNoContent
+type ReRipple = ReqBody '[JSON] Coordinates :> PostNoContent
 
 data RippleSummary = RippleSummary
   deriving (FromJSON, ToJSON) via (Autodocodec RippleSummary)

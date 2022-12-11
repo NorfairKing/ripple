@@ -1,7 +1,9 @@
-{ mkDerivation, aeson, autodocodec, base, genvalidity, lib
-, monad-logger, mtl, persistent, persistent-sqlite
-, persistent-template, servant, servant-client, servant-server
-, sydtest, sydtest-discover, wai, wai-extra, warp
+{ mkDerivation, aeson, autodocodec, base, deepseq, genvalidity
+, genvalidity-sydtest, genvalidity-sydtest-aeson
+, genvalidity-sydtest-persistent, hashable, lib, monad-logger, mtl
+, path-pieces, persistent, persistent-sqlite, persistent-template
+, QuickCheck, servant, servant-client, servant-server, sydtest
+, sydtest-discover, text, validity, wai, wai-extra, warp
 }:
 mkDerivation {
   pname = "ripple-server";
@@ -10,12 +12,16 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    aeson autodocodec base genvalidity monad-logger mtl persistent
-    persistent-sqlite persistent-template servant servant-client
-    servant-server wai wai-extra warp
+    aeson autodocodec base deepseq genvalidity hashable monad-logger
+    mtl path-pieces persistent persistent-sqlite persistent-template
+    QuickCheck servant servant-client servant-server text validity wai
+    wai-extra warp
   ];
   executableHaskellDepends = [ base ];
-  testHaskellDepends = [ base sydtest ];
+  testHaskellDepends = [
+    base genvalidity-sydtest genvalidity-sydtest-aeson
+    genvalidity-sydtest-persistent path-pieces sydtest
+  ];
   testToolDepends = [ sydtest-discover ];
   license = "unknown";
   mainProgram = "ripple-server";

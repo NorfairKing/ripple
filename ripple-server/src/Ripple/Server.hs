@@ -6,6 +6,7 @@ module Ripple.Server (rippleServerMain) where
 
 import Control.Monad.Logger
 import Control.Monad.Reader
+import Data.Coordinates
 import Database.Persist.Sqlite
 import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
@@ -53,11 +54,11 @@ rippleServer =
     :<|> serveListRipples
     :<|> serveReRipple
 
-serveUploadRipple :: H NoContent
-serveUploadRipple = pure NoContent
+serveUploadRipple :: Coordinates -> H NoContent
+serveUploadRipple _ = pure NoContent
 
-serveListRipples :: H [RippleSummary]
-serveListRipples = pure []
+serveListRipples :: Coordinates -> H [RippleSummary]
+serveListRipples _ = pure []
 
-serveReRipple :: H NoContent
-serveReRipple = pure NoContent
+serveReRipple :: Coordinates -> H NoContent
+serveReRipple _ = pure NoContent
