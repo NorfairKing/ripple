@@ -11,6 +11,7 @@ build-type:     Simple
 library
   exposed-modules:
       Ripple.API
+      Ripple.Client
       Ripple.Server
   other-modules:
       Paths_ripple_server
