@@ -33,6 +33,22 @@
         "type": "github"
       }
     },
+    "feedback": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1669637943,
+        "narHash": "sha256-5pZlhsxne9davNuooVGEt5A9WinlgUHTxKYSe6Dqo2E=",
+        "owner": "NorfairKing",
+        "repo": "feedback",
+        "rev": "f8d05f06534abf4656338452c26ae74dd53574f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NorfairKing",
+        "repo": "feedback",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -159,6 +175,7 @@
       "inputs": {
         "autodocodec": "autodocodec",
         "dekking": "dekking",
+        "feedback": "feedback",
         "nixpkgs": "nixpkgs",
         "pre-commit-hooks": "pre-commit-hooks",
         "safe-coloured-text": "safe-coloured-text",

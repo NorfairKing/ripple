@@ -11,6 +11,8 @@
     safe-coloured-text.flake = false;
     sydtest.url = "github:NorfairKing/sydtest?ref=flake";
     sydtest.flake = false;
+    feedback.url = "github:NorfairKing/feedback";
+    feedback.flake = false;
     dekking.url = "github:NorfairKing/dekking";
     dekking.flake = false;
 
@@ -24,6 +26,7 @@
     , safe-coloured-text
     , sydtest
     , autodocodec
+    , feedback
     , dekking
     }:
     let
@@ -37,6 +40,7 @@
           (import (safe-coloured-text + "/nix/overlay.nix"))
           (import (sydtest + "/nix/overlay.nix"))
           (import (validity + "/nix/overlay.nix"))
+          (import (feedback + "/nix/overlay.nix"))
           (import (dekking + "/nix/overlay.nix"))
         ];
       };
@@ -77,6 +81,7 @@
         withHoogle = true;
         doBenchmark = true;
         buildInputs = with pkgs; [
+          pkgs.feedback
           niv
           zlib
           cabal-install
@@ -88,7 +93,7 @@
             ormolu
             cabal2nix
           ]);
-        shellHook = self.checks.${system}.pre-commit.shellHook;
+        shellHook = self.checks.${system}.pre-commit.shellHook + pkgs.feedback.shellHook;
       };
       nixosModules.${system}.default = mkNixosModule { envname = "production"; };
       nixosModuleFactories.${system}.default = mkNixosModule;
