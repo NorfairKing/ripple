@@ -24,6 +24,7 @@ library
     , aeson
     , autodocodec
     , base >=4.7 && <5
+    , bytestring
     , deepseq
     , genvalidity
     , hashable
@@ -35,6 +36,8 @@ library
     , persistent-template
     , servant
     , servant-client
+    , servant-multipart
+    , servant-multipart-client
     , servant-server
     , text
     , validity

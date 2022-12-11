@@ -12,6 +12,7 @@ import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
 import Ripple.API
 import Servant.API
+import Servant.Multipart
 import Servant.Server
 
 rippleServerMain :: IO ()
@@ -54,8 +55,8 @@ rippleServer =
     :<|> serveListRipples
     :<|> serveReRipple
 
-serveUploadRipple :: Coordinates -> H NoContent
-serveUploadRipple _ = pure NoContent
+serveUploadRipple :: Coordinates -> MultipartData Tmp -> H NoContent
+serveUploadRipple _ _ = pure NoContent
 
 serveListRipples :: Coordinates -> H [RippleSummary]
 serveListRipples _ = pure []

@@ -1,8 +1,9 @@
-{ mkDerivation, aeson, autodocodec, base, deepseq, genvalidity
-, genvalidity-sydtest, genvalidity-sydtest-aeson
+{ mkDerivation, aeson, autodocodec, base, bytestring, deepseq
+, genvalidity, genvalidity-sydtest, genvalidity-sydtest-aeson
 , genvalidity-sydtest-persistent, hashable, lib, monad-logger, mtl
 , path-pieces, persistent, persistent-sqlite, persistent-template
-, QuickCheck, servant, servant-client, servant-server, sydtest
+, QuickCheck, servant, servant-client, servant-multipart
+, servant-multipart-client, servant-server, sydtest
 , sydtest-discover, text, validity, wai, wai-extra, warp
 }:
 mkDerivation {
@@ -12,10 +13,11 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    aeson autodocodec base deepseq genvalidity hashable monad-logger
-    mtl path-pieces persistent persistent-sqlite persistent-template
-    QuickCheck servant servant-client servant-server text validity wai
-    wai-extra warp
+    aeson autodocodec base bytestring deepseq genvalidity hashable
+    monad-logger mtl path-pieces persistent persistent-sqlite
+    persistent-template QuickCheck servant servant-client
+    servant-multipart servant-multipart-client servant-server text
+    validity wai wai-extra warp
   ];
   executableHaskellDepends = [ base ];
   testHaskellDepends = [

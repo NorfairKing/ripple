@@ -19,6 +19,7 @@ library:
   - QuickCheck
   - aeson
   - autodocodec
+  - bytestring
   - deepseq
   - genvalidity
   - hashable
@@ -31,6 +32,8 @@ library:
   - persistent-template
   - servant
   - servant-client
+  - servant-multipart
+  - servant-multipart-client
   - servant-server
   - validity
   - wai

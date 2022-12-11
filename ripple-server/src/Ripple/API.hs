@@ -10,6 +10,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import Data.Coordinates
 import Data.Proxy
 import Servant.API
+import Servant.Multipart
 
 rippleAPI :: Proxy RippleAPI
 rippleAPI = Proxy
@@ -19,11 +20,21 @@ type RippleAPI =
     :<|> ListRipples
     :<|> ReRipple
 
-type UploadRipple = ReqBody '[JSON] Coordinates :> PostNoContent
+type UploadRipple =
+  "upload"
+    :> ReqBody '[JSON] Coordinates
+    :> MultipartForm Tmp (MultipartData Tmp)
+    :> PostNoContent
 
-type ListRipples = ReqBody '[JSON] Coordinates :> Get '[JSON] [RippleSummary]
+type ListRipples =
+  "list"
+    :> ReqBody '[JSON] Coordinates
+    :> Get '[JSON] [RippleSummary]
 
-type ReRipple = ReqBody '[JSON] Coordinates :> PostNoContent
+type ReRipple =
+  "re-ripple"
+    :> ReqBody '[JSON] Coordinates
+    :> PostNoContent
 
 data RippleSummary = RippleSummary
   deriving (FromJSON, ToJSON) via (Autodocodec RippleSummary)
