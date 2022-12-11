@@ -1,2 +1,6 @@
 loops:
-  test: cabal test all
+  test:
+    script: |
+      cd ripple-server
+      hpack
+      cabal test all --test-options="--golden-start --golden-reset"

@@ -8,6 +8,7 @@ module Ripple.API where
 import Autodocodec
 import Data.Aeson (FromJSON, ToJSON)
 import Data.Coordinates
+import Data.OpenApi as OpenApi (ToSchema)
 import Data.Proxy
 import Servant.API
 import Servant.Multipart
@@ -22,7 +23,6 @@ type RippleAPI =
 
 type UploadRipple =
   "upload"
-    :> ReqBody '[JSON] Coordinates
     :> MultipartForm Tmp (MultipartData Tmp)
     :> PostNoContent
 
@@ -37,7 +37,7 @@ type ReRipple =
     :> PostNoContent
 
 data RippleSummary = RippleSummary
-  deriving (FromJSON, ToJSON) via (Autodocodec RippleSummary)
+  deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec RippleSummary)
 
 instance HasCodec RippleSummary where
   codec =

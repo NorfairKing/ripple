@@ -47,6 +47,7 @@ module Data.Coordinates
 where
 
 import Autodocodec
+import Autodocodec.OpenAPI ()
 import Control.Arrow (left)
 import Control.DeepSeq
 import Data.Aeson (FromJSON, ToJSON)
@@ -55,6 +56,7 @@ import Data.GenValidity
 import Data.Hashable
 import Data.Int
 import Data.List
+import Data.OpenApi as OpenApi (ToSchema)
 import Data.Proxy
 import Data.Ratio
 import Data.Text (Text)
@@ -85,7 +87,7 @@ coordToFixed (Coord i) = MkFixed (fromIntegral i)
 -- We store a coordinate as a fixed-point number with scale factor 10E5
 newtype Coord = Coord {unCoord :: Int64}
   deriving stock (Eq, Ord, Generic)
-  deriving (FromJSON, ToJSON) via (Autodocodec Coord)
+  deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec Coord)
 
 instance Validity Coord
 
@@ -135,7 +137,7 @@ instance GenValid Coord where
 
 newtype Latitude = Latitude {unLatitude :: Coord}
   deriving stock (Eq, Ord, Generic)
-  deriving (FromJSON, ToJSON) via (Autodocodec Coord)
+  deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec Coord)
 
 mkLatitude :: Coord -> Maybe Latitude
 mkLatitude = constructValid . Latitude
@@ -193,7 +195,7 @@ instance GenValid Latitude where
 
 newtype Longitude = Longitude {unLongitude :: Coord}
   deriving stock (Eq, Ord, Generic)
-  deriving (FromJSON, ToJSON) via (Autodocodec Coord)
+  deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec Coord)
 
 mkLongitude :: Coord -> Maybe Longitude
 mkLongitude = constructValid . Longitude
@@ -254,7 +256,7 @@ data Coordinates = Coordinates
     coordinatesLon :: !Longitude
   }
   deriving stock (Show, Eq, Ord, Generic)
-  deriving (FromJSON, ToJSON) via (Autodocodec Coordinates)
+  deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec Coordinates)
 
 instance Validity Coordinates
 

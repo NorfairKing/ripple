@@ -11,7 +11,7 @@ import Servant.Client
 import Servant.Multipart
 import Servant.Multipart.Client ()
 
-clientUploadRipple :: Coordinates -> (LB.ByteString, MultipartData Tmp) -> ClientM NoContent
+clientUploadRipple :: (LB.ByteString, MultipartData Tmp) -> ClientM NoContent
 clientListRipples :: Coordinates -> ClientM [RippleSummary]
 clientReRipple :: Coordinates -> ClientM NoContent
 clientUploadRipple

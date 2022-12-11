@@ -55,8 +55,8 @@ rippleServer =
     :<|> serveListRipples
     :<|> serveReRipple
 
-serveUploadRipple :: Coordinates -> MultipartData Tmp -> H NoContent
-serveUploadRipple _ _ = pure NoContent
+serveUploadRipple :: MultipartData Tmp -> H NoContent
+serveUploadRipple _ = pure NoContent
 
 serveListRipples :: Coordinates -> H [RippleSummary]
 serveListRipples _ = pure []
