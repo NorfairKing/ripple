@@ -95,7 +95,8 @@ type ListRipples =
     :> Get '[JSON] [RippleSummary]
 
 data RippleSummary = RippleSummary
-  { rippleSummaryId :: RippleUuid
+  { rippleSummaryId :: RippleUuid,
+    rippleSummaryCoordinates :: Coordinates
   }
   deriving stock (Show, Eq, Generic)
   deriving (FromJSON, ToJSON, OpenApi.ToSchema) via (Autodocodec RippleSummary)
@@ -103,7 +104,9 @@ data RippleSummary = RippleSummary
 instance HasCodec RippleSummary where
   codec =
     object "RippleSummary" $
-      RippleSummary <$> requiredField "id" "identifier" .= rippleSummaryId
+      RippleSummary
+        <$> requiredField "id" "identifier" .= rippleSummaryId
+        <*> requiredField "coordinates" "coordinates" .= rippleSummaryCoordinates
 
 type GetRipple =
   "ripple"
@@ -132,7 +135,7 @@ instance GenValid RippleContent
 type ReRipple =
   "re-ripple"
     :> ReqBody '[JSON] ReRippleRequest
-    :> PostNoContent
+    :> Post '[JSON] RippleUuid
 
 data ReRippleRequest = ReRippleRequest
   { reRippleRequestCoordinates :: Coordinates,

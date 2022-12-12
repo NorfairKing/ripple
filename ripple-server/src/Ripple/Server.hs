@@ -7,6 +7,8 @@ module Ripple.Server where
 import Control.Monad.Logger
 import Control.Monad.Reader
 import Data.Coordinates
+import Data.Maybe
+import Data.UUID.Typed as UUID
 import Database.Persist.Sqlite
 import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
@@ -59,14 +61,30 @@ rippleServer =
     :<|> serveGetRipple
     :<|> serveReRipple
 
+exampleUuid :: RippleUuid
+exampleUuid = fromJust $ UUID.parseUUIDString "70316487-345c-449e-a390-b0406b9292a9"
+
+exampleCoordinates :: Coordinates
+exampleCoordinates =
+  Coordinates
+    { coordinatesLat = Latitude 0,
+      coordinatesLon = Longitude 0
+    }
+
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
-serveUploadRipple _ = undefined
+serveUploadRipple _ = pure exampleUuid
 
 serveListRipples :: Coordinates -> H [RippleSummary]
-serveListRipples _ = undefined
+serveListRipples _ =
+  pure
+    [ RippleSummary
+        { rippleSummaryId = exampleUuid,
+          rippleSummaryCoordinates = exampleCoordinates
+        }
+    ]
 
 serveGetRipple :: RippleUuid -> H RippleContent
-serveGetRipple _ = undefined
+serveGetRipple _ = pure $ RippleContent mempty
 
-serveReRipple :: ReRippleRequest -> H NoContent
-serveReRipple _ = undefined
+serveReRipple :: ReRippleRequest -> H RippleUuid
+serveReRipple _ = pure exampleUuid

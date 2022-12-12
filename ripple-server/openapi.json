@@ -40,13 +40,17 @@
             },
             "RippleSummary": {
                 "properties": {
+                    "coordinates": {
+                        "$ref": "#/components/schemas/Coordinates"
+                    },
                     "id": {
                         "description": "identifier",
                         "type": "string"
                     }
                 },
                 "required": [
-                    "id"
+                    "id",
+                    "coordinates"
                 ],
                 "type": "object"
             }
@@ -101,7 +105,14 @@
                     }
                 },
                 "responses": {
-                    "204": {
+                    "200": {
+                        "content": {
+                            "application/json;charset=utf-8": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
                         "description": ""
                     },
                     "400": {

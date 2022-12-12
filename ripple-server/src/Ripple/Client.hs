@@ -14,7 +14,7 @@ import Servant.Multipart.Client
 clientUploadRippleRaw :: (LB.ByteString, UploadRippleRequest) -> ClientM RippleUuid
 clientListRipples :: Coordinates -> ClientM [RippleSummary]
 clientGetRipple :: RippleUuid -> ClientM RippleContent
-clientReRipple :: ReRippleRequest -> ClientM NoContent
+clientReRipple :: ReRippleRequest -> ClientM RippleUuid
 clientUploadRippleRaw
   :<|> clientListRipples
   :<|> clientGetRipple
