@@ -3,17 +3,22 @@
 
 module Ripple.Client where
 
+import Control.Monad.IO.Class
 import qualified Data.ByteString.Lazy as LB
 import Data.Coordinates
 import Ripple.API
 import Servant.API
 import Servant.Client
-import Servant.Multipart
-import Servant.Multipart.Client ()
+import Servant.Multipart.Client
 
-clientUploadRipple :: (LB.ByteString, MultipartData Tmp) -> ClientM NoContent
+clientUploadRippleRaw :: (LB.ByteString, RippleUpload) -> ClientM NoContent
 clientListRipples :: Coordinates -> ClientM [RippleSummary]
 clientReRipple :: Coordinates -> ClientM NoContent
-clientUploadRipple
+clientUploadRippleRaw
   :<|> clientListRipples
   :<|> clientReRipple = client rippleAPI
+
+clientUploadRipple :: RippleUpload -> ClientM NoContent
+clientUploadRipple upload = do
+  boundary <- liftIO genBoundary
+  clientUploadRippleRaw (boundary, upload)

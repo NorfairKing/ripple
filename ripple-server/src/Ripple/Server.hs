@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Ripple.Server (rippleServerMain) where
+module Ripple.Server where
 
 import Control.Monad.Logger
 import Control.Monad.Reader
@@ -12,7 +12,6 @@ import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
 import Ripple.API
 import Servant.API
-import Servant.Multipart
 import Servant.Server
 
 rippleServerMain :: IO ()
@@ -26,9 +25,13 @@ rippleServerMain = do
         let application = makeRippleApplication env
         liftIO $ Warp.run 8000 application
 
-{-# ANN makeRippleApplication ("NOCOVER" :: String) #-}
 makeRippleApplication :: Env -> Wai.Application
-makeRippleApplication env = serve rippleAPI $ hoistServer rippleAPI (runH env) rippleServer
+makeRippleApplication env = serve rippleAPI (makeRippleServer env)
+
+{-# ANN makeRippleServer ("NOCOVER" :: String) #-}
+makeRippleServer :: Env -> Server RippleAPI
+makeRippleServer env =
+  hoistServer rippleAPI (runH env) rippleServer
 
 runH :: Env -> H a -> Handler a
 runH env func = runReaderT (unH func) env
@@ -55,7 +58,7 @@ rippleServer =
     :<|> serveListRipples
     :<|> serveReRipple
 
-serveUploadRipple :: MultipartData Tmp -> H NoContent
+serveUploadRipple :: RippleUpload -> H NoContent
 serveUploadRipple _ = pure NoContent
 
 serveListRipples :: Coordinates -> H [RippleSummary]

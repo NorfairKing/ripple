@@ -21,11 +21,13 @@ library:
   dependencies:
   - QuickCheck
   - aeson
-  - autodocodec-openapi3
   - autodocodec
+  - autodocodec-openapi3
   - bytestring
   - deepseq
   - genvalidity
+  - genvalidity-bytestring
+  - genvalidity-text
   - hashable
   - monad-logger
   - mtl
@@ -37,6 +39,7 @@ library:
   - servant
   - servant-client
   - servant-multipart
+  - servant-multipart-api
   - servant-multipart-client
   - servant-server
   - text
@@ -71,7 +74,9 @@ tests:
     - genvalidity-sydtest
     - genvalidity-sydtest-aeson
     - genvalidity-sydtest-persistent
+    - http-client
     - http-media
+    - http-types
     - insert-ordered-containers
     - lens
     - openapi3
@@ -81,6 +86,11 @@ tests:
     - servant-client
     - servant-multipart
     - servant-openapi3
+    - servant-server
     - sydtest
     - sydtest-aeson
+    - sydtest-persistent
+    - sydtest-persistent-sqlite
+    - sydtest-servant
+    - sydtest-wai
     - text

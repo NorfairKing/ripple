@@ -31,6 +31,9 @@ module Data.Coordinates
   ( Coord (..),
     fixedToCoord,
     coordToFixed,
+    renderCoord,
+    parseCoordOrError,
+    parseCoordOrFail,
     Latitude (..),
     mkLatitude,
     mkLatitudeOrError,
@@ -81,6 +84,19 @@ fixedToCoord (MkFixed i) = Coord {unCoord = fromInteger i}
 
 coordToFixed :: Coord -> Fixed E5
 coordToFixed (Coord i) = MkFixed (fromIntegral i)
+
+renderCoord :: Coord -> Text
+renderCoord = T.pack . show . (realToFrac :: Coord -> Double)
+
+parseCoordOrError :: Text -> Either String Coord
+parseCoordOrError t = case readMaybe (T.unpack t) of
+  Nothing -> Left $ "Un-Read-able Coord:" <> show t
+  Just f -> pure $ (realToFrac :: Double -> Coord) f
+
+parseCoordOrFail :: MonadFail m => Text -> m Coord
+parseCoordOrFail t = case parseCoordOrError t of
+  Left err -> fail err
+  Right l -> pure l
 
 -- Newtype for a custom 'PersistFieldSql' instance. (and to hide unused instances)
 --
@@ -190,7 +206,9 @@ latitudeToDouble :: Latitude -> Double
 latitudeToDouble = latitudeToFloat
 
 instance GenValid Latitude where
-  genValid = choose (-90_00000, 90_00000) `suchThatMap` (mkLatitude . fixedToCoord . MkFixed)
+  genValid =
+    choose (-90_00000, 90_00000)
+      `suchThatMap` (mkLatitude . fixedToCoord . MkFixed)
   shrinkValid = shrinkValidStructurally
 
 newtype Longitude = Longitude {unLongitude :: Coord}
@@ -248,7 +266,9 @@ longitudeToDouble :: Longitude -> Double
 longitudeToDouble = longitudeToFloat
 
 instance GenValid Longitude where
-  genValid = choose (-180_00000, 180_00000 - 1) `suchThatMap` (mkLongitude . fixedToCoord . MkFixed)
+  genValid =
+    choose (-180_00000, 180_00000 - 1)
+      `suchThatMap` (mkLongitude . fixedToCoord . MkFixed)
   shrinkValid = shrinkValidStructurally
 
 data Coordinates = Coordinates
@@ -276,7 +296,10 @@ instance PathPiece Coordinates where
 
   fromPathPiece :: Text -> Maybe Coordinates
   fromPathPiece t = case T.split (== ',') t of
-    [latText, lonText] -> Coordinates <$> readMaybe (T.unpack latText) <*> readMaybe (T.unpack lonText)
+    [latText, lonText] ->
+      Coordinates
+        <$> readMaybe (T.unpack latText)
+        <*> readMaybe (T.unpack lonText)
     _ -> Nothing
 
 instance HasCodec Coordinates where

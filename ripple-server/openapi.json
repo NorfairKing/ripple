@@ -86,7 +86,7 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "file": {
+                                    "image": {
                                         "format": "binary"
                                     }
                                 },

@@ -24,7 +24,7 @@ import Test.Syd
 import Test.Syd.Aeson
 
 -- Based on https://github.com/biocad/servant-openapi3/issues/19
-instance (HasOpenApi sub) => HasOpenApi (MultipartForm Tmp (MultipartData Tmp) :> sub) where
+instance (HasOpenApi sub) => HasOpenApi (MultipartForm tag RippleUpload :> sub) where
   toOpenApi _ = toOpenApi (Proxy :: Proxy sub) & addRequestBody reqBody
     where
       myMediaType :: MediaType
@@ -32,7 +32,7 @@ instance (HasOpenApi sub) => HasOpenApi (MultipartForm Tmp (MultipartData Tmp) :
       myProperties :: InsOrdHashMap Text (Referenced Schema)
       myProperties =
         InsOrdHashMap.fromList
-          [ ( "file",
+          [ ( "image",
               Inline
                 ( mempty
                     { _schemaFormat = Just "binary"
