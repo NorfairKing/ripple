@@ -72,6 +72,7 @@ test-suite ripple-server-test
       Data.CoordinatesSpec
       Ripple.APISpec
       Ripple.Server.Handler.RippleUploadSpec
+      Ripple.Server.TestUtils
       Paths_ripple_server
   hs-source-dirs:
       test
