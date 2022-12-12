@@ -56,13 +56,17 @@ rippleServer :: ServerT RippleAPI H
 rippleServer =
   serveUploadRipple
     :<|> serveListRipples
+    :<|> serveGetRipple
     :<|> serveReRipple
 
-serveUploadRipple :: UploadRippleRequest -> H NoContent
-serveUploadRipple _ = pure NoContent
+serveUploadRipple :: UploadRippleRequest -> H RippleUuid
+serveUploadRipple _ = undefined
 
 serveListRipples :: Coordinates -> H [RippleSummary]
-serveListRipples _ = pure []
+serveListRipples _ = undefined
+
+serveGetRipple :: RippleUuid -> H RippleContent
+serveGetRipple _ = undefined
 
 serveReRipple :: ReRippleRequest -> H NoContent
-serveReRipple _ = pure NoContent
+serveReRipple _ = undefined

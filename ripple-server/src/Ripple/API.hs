@@ -4,7 +4,9 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Ripple.API where
 
@@ -18,9 +20,10 @@ import Data.GenValidity.ByteString ()
 import Data.GenValidity.Text ()
 import Data.GenValidity.UUID.Typed ()
 import Data.List
-import Data.OpenApi as OpenApi (ToSchema)
+import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema, ToSchema (..), binarySchema)
 import Data.Proxy
 import Data.Text (Text)
+import Data.Typeable
 import Data.UUID.Typed
 import GHC.Generics (Generic)
 import Servant.API
@@ -33,16 +36,17 @@ rippleAPI = Proxy
 type RippleAPI =
   UploadRipple
     :<|> ListRipples
+    :<|> GetRipple
     :<|> ReRipple
 
 type UploadRipple =
   "upload"
     :> MultipartForm Mem UploadRippleRequest
-    :> PostNoContent
+    :> Post '[JSON] RippleUuid
 
 data UploadRippleRequest = UploadRippleRequest
   { uploadRippleRequestFileType :: Text,
-    uploadRippleRequestFileContents :: ByteString,
+    uploadRippleRequestFileContents :: RippleContent,
     uploadRippleRequestCoordinates :: Coordinates
   }
   deriving (Show, Eq, Generic)
@@ -61,7 +65,7 @@ instance FromMultipart Mem UploadRippleRequest where
     let uploadRippleRequestCoordinates = Coordinates {..}
     (uploadRippleRequestFileType, uploadRippleRequestFileContents) <- case files of
       [FileData {..}] -> case fdInputName of
-        "image" -> pure (fdFileCType, LB.toStrict fdPayload)
+        "image" -> pure (fdFileCType, RippleContent {unRippleContent = LB.toStrict fdPayload})
         _ -> Left $ "Incorrect file input name: " <> show fdInputName
       [] -> Left "Missing file"
       _ -> Left "Too many files."
@@ -78,7 +82,7 @@ instance ToMultipart Mem UploadRippleRequest where
             { fdInputName = "image",
               fdFileName = "image.jpg",
               fdFileCType = "image/jpeg",
-              fdPayload = LB.fromStrict uploadRippleRequestFileContents
+              fdPayload = LB.fromStrict $ unRippleContent uploadRippleRequestFileContents
             }
         files = [file]
      in MultipartData {..}
@@ -101,6 +105,30 @@ instance HasCodec RippleSummary where
     object "RippleSummary" $
       RippleSummary <$> requiredField "id" "identifier" .= rippleSummaryId
 
+type GetRipple =
+  "ripple"
+    :> Capture "uuid" RippleUuid
+    :> Get '[OctetStream] RippleContent
+
+newtype RippleContent = RippleContent {unRippleContent :: ByteString}
+  deriving (Show, Eq, Generic)
+
+instance Validity RippleContent
+
+instance OpenApi.ToSchema RippleContent where
+  declareNamedSchema Proxy = do
+    pure $ NamedSchema (Just "RippleContent") binarySchema
+
+instance MimeRender OctetStream RippleContent where
+  mimeRender Proxy RippleContent {..} = mimeRender (Proxy :: Proxy OctetStream) unRippleContent
+
+instance MimeUnrender OctetStream RippleContent where
+  mimeUnrenderWithType Proxy mt bs = do
+    b <- mimeUnrenderWithType (Proxy :: Proxy OctetStream) mt bs
+    pure RippleContent {unRippleContent = b}
+
+instance GenValid RippleContent
+
 type ReRipple =
   "re-ripple"
     :> ReqBody '[JSON] ReRippleRequest
@@ -121,3 +149,7 @@ instance HasCodec ReRippleRequest where
         <*> requiredField "id" "identifier of the ripple" .= reRippleRequestId
 
 type RippleUuid = UUID RippleSummary
+
+deriving via (Autodocodec RippleUuid) instance Typeable tag => OpenApi.ToSchema (UUID tag)
+
+instance Typeable tag => OpenApi.ToParamSchema (UUID tag)

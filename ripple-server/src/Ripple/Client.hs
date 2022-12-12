@@ -11,14 +11,16 @@ import Servant.API
 import Servant.Client
 import Servant.Multipart.Client
 
-clientUploadRippleRaw :: (LB.ByteString, UploadRippleRequest) -> ClientM NoContent
+clientUploadRippleRaw :: (LB.ByteString, UploadRippleRequest) -> ClientM RippleUuid
 clientListRipples :: Coordinates -> ClientM [RippleSummary]
+clientGetRipple :: RippleUuid -> ClientM RippleContent
 clientReRipple :: ReRippleRequest -> ClientM NoContent
 clientUploadRippleRaw
   :<|> clientListRipples
+  :<|> clientGetRipple
   :<|> clientReRipple = client rippleAPI
 
-clientUploadRipple :: UploadRippleRequest -> ClientM NoContent
+clientUploadRipple :: UploadRippleRequest -> ClientM RippleUuid
 clientUploadRipple upload = do
   boundary <- liftIO genBoundary
   clientUploadRippleRaw (boundary, upload)

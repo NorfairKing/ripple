@@ -15,16 +15,17 @@ spec = rippleServerSpec $ do
   it "can upload a ripple, then find it, and re-ripple it" $ \cenv ->
     forAllValid $ \uploadRippleRequest -> do
       testClient cenv $ do
-        NoContent <- clientUploadRipple uploadRippleRequest
+        uuidUploaded <- clientUploadRipple uploadRippleRequest
         let coordinates = uploadRippleRequestCoordinates uploadRippleRequest
         ripples <- clientListRipples coordinates
-        uuid <- case ripples of
+        uuidListed <- case ripples of
           [RippleSummary {..}] -> pure rippleSummaryId
           _ -> liftIO $ expectationFailure "Expected exactly one ripple"
+        liftIO $ uuidListed `shouldBe` uuidUploaded
         let rerippleRequest =
               ReRippleRequest
                 { reRippleRequestCoordinates = coordinates,
-                  reRippleRequestId = uuid
+                  reRippleRequestId = uuidListed
                 }
         NoContent <- clientReRipple rerippleRequest
         pure ()

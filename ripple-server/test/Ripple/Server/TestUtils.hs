@@ -5,14 +5,11 @@ module Ripple.Server.TestUtils (rippleServerSpec) where
 
 import Network.HTTP.Client as HTTP
 import Ripple.API
-import Ripple.Client
 import Ripple.Server
-import Servant.API
 import Servant.Client
 import Test.Syd
 import Test.Syd.Persistent.Sqlite
 import Test.Syd.Servant as Servant
-import Test.Syd.Validity
 import Test.Syd.Wai
 
 rippleServerSpec :: TestDef '[HTTP.Manager] ClientEnv -> Spec
