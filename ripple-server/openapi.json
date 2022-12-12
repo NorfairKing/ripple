@@ -18,7 +18,34 @@
                 ],
                 "type": "object"
             },
-            "RippleSummary": {}
+            "ReRippleRequest": {
+                "properties": {
+                    "coordinates": {
+                        "$ref": "#/components/schemas/Coordinates"
+                    },
+                    "id": {
+                        "description": "identifier of the ripple",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "coordinates",
+                    "id"
+                ],
+                "type": "object"
+            },
+            "RippleSummary": {
+                "properties": {
+                    "id": {
+                        "description": "identifier",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "type": "object"
+            }
         }
     },
     "info": {
@@ -64,7 +91,7 @@
                     "content": {
                         "application/json;charset=utf-8": {
                             "schema": {
-                                "$ref": "#/components/schemas/Coordinates"
+                                "$ref": "#/components/schemas/ReRippleRequest"
                             }
                         }
                     }

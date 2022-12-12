@@ -58,11 +58,11 @@ rippleServer =
     :<|> serveListRipples
     :<|> serveReRipple
 
-serveUploadRipple :: RippleUpload -> H NoContent
+serveUploadRipple :: UploadRippleRequest -> H NoContent
 serveUploadRipple _ = pure NoContent
 
 serveListRipples :: Coordinates -> H [RippleSummary]
 serveListRipples _ = pure []
 
-serveReRipple :: Coordinates -> H NoContent
+serveReRipple :: ReRippleRequest -> H NoContent
 serveReRipple _ = pure NoContent

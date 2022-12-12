@@ -46,6 +46,9 @@ library:
   - validity
   - wai
   - wai-extra
+  - genvalidity-typed-uuid
+  - typed-uuid
+  - uuid
   - warp
 
 executables:

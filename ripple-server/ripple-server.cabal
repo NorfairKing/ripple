@@ -32,6 +32,7 @@ library
     , genvalidity
     , genvalidity-bytestring
     , genvalidity-text
+    , genvalidity-typed-uuid
     , hashable
     , monad-logger
     , mtl
@@ -47,6 +48,8 @@ library
     , servant-multipart-client
     , servant-server
     , text
+    , typed-uuid
+    , uuid
     , validity
     , wai
     , wai-extra
@@ -72,6 +75,7 @@ test-suite ripple-server-test
       Data.CoordinatesSpec
       Ripple.APISpec
       Ripple.Server.Handler.RippleUploadSpec
+      Ripple.Server.Handler.ScenarioSpec
       Ripple.Server.TestUtils
       Paths_ripple_server
   hs-source-dirs:

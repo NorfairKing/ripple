@@ -1,15 +1,16 @@
 { mkDerivation, aeson, autodocodec, autodocodec-openapi3, base
 , bytestring, deepseq, genvalidity, genvalidity-bytestring
 , genvalidity-sydtest, genvalidity-sydtest-aeson
-, genvalidity-sydtest-persistent, genvalidity-text, hashable
-, http-client, http-media, http-types, insert-ordered-containers
-, lens, lib, monad-logger, mtl, openapi3, path-pieces, persistent
-, persistent-sqlite, persistent-template, QuickCheck, servant
-, servant-client, servant-multipart, servant-multipart-api
+, genvalidity-sydtest-persistent, genvalidity-text
+, genvalidity-typed-uuid, hashable, http-client, http-media
+, http-types, insert-ordered-containers, lens, lib, monad-logger
+, mtl, openapi3, path-pieces, persistent, persistent-sqlite
+, persistent-template, QuickCheck, servant, servant-client
+, servant-multipart, servant-multipart-api
 , servant-multipart-client, servant-openapi3, servant-server
 , sydtest, sydtest-aeson, sydtest-discover, sydtest-persistent
 , sydtest-persistent-sqlite, sydtest-servant, sydtest-wai, text
-, validity, wai, wai-extra, warp
+, typed-uuid, uuid, validity, wai, wai-extra, warp
 }:
 mkDerivation {
   pname = "ripple-server";
@@ -19,11 +20,12 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [
     aeson autodocodec autodocodec-openapi3 base bytestring deepseq
-    genvalidity genvalidity-bytestring genvalidity-text hashable
-    monad-logger mtl openapi3 path-pieces persistent persistent-sqlite
-    persistent-template QuickCheck servant servant-client
-    servant-multipart servant-multipart-api servant-multipart-client
-    servant-server text validity wai wai-extra warp
+    genvalidity genvalidity-bytestring genvalidity-text
+    genvalidity-typed-uuid hashable monad-logger mtl openapi3
+    path-pieces persistent persistent-sqlite persistent-template
+    QuickCheck servant servant-client servant-multipart
+    servant-multipart-api servant-multipart-client servant-server text
+    typed-uuid uuid validity wai wai-extra warp
   ];
   executableHaskellDepends = [ base ];
   testHaskellDepends = [
