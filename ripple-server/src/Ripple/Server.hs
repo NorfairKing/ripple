@@ -4,6 +4,7 @@
 
 module Ripple.Server where
 
+import Control.Monad.Except
 import Control.Monad.Logger
 import Control.Monad.Reader
 import Data.Coordinates
@@ -13,8 +14,7 @@ import Database.Persist.Sqlite
 import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
 import Ripple.API
-import Servant.API
-import Servant.Server
+import Servant
 
 rippleServerMain :: IO ()
 rippleServerMain = do
@@ -39,7 +39,7 @@ runH :: Env -> H a -> Handler a
 runH env func = runReaderT (unH func) env
 
 newtype H a = H {unH :: ReaderT Env Handler a}
-  deriving (Functor, Applicative, Monad, MonadIO, MonadReader Env)
+  deriving (Functor, Applicative, Monad, MonadIO, MonadReader Env, MonadError ServerError)
 
 instance MonadLogger H where
   monadLoggerLog loc src lvl msg = do
@@ -74,14 +74,17 @@ exampleCoordinates =
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
 serveUploadRipple _ = pure exampleUuid
 
-serveListRipples :: Coordinates -> H [RippleSummary]
-serveListRipples _ =
-  pure
-    [ RippleSummary
-        { rippleSummaryId = exampleUuid,
-          rippleSummaryCoordinates = exampleCoordinates
-        }
-    ]
+serveListRipples :: Maybe Latitude -> Maybe Longitude -> H [RippleSummary]
+serveListRipples mLat mLon =
+  case Coordinates <$> mLat <*> mLon of
+    Nothing -> throwError err400
+    Just coordinates ->
+      pure
+        [ RippleSummary
+            { rippleSummaryId = exampleUuid,
+              rippleSummaryCoordinates = coordinates
+            }
+        ]
 
 serveGetRipple :: RippleUuid -> H RippleContent
 serveGetRipple _ = pure $ RippleContent mempty

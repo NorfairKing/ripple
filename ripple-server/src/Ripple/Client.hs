@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Ripple.Client where
 
@@ -12,11 +13,11 @@ import Servant.Client
 import Servant.Multipart.Client
 
 clientUploadRippleRaw :: (LB.ByteString, UploadRippleRequest) -> ClientM RippleUuid
-clientListRipples :: Coordinates -> ClientM [RippleSummary]
+clientListRipplesRaw :: Maybe Latitude -> Maybe Longitude -> ClientM [RippleSummary]
 clientGetRipple :: RippleUuid -> ClientM RippleContent
 clientReRipple :: ReRippleRequest -> ClientM RippleUuid
 clientUploadRippleRaw
-  :<|> clientListRipples
+  :<|> clientListRipplesRaw
   :<|> clientGetRipple
   :<|> clientReRipple = client rippleAPI
 
@@ -24,3 +25,6 @@ clientUploadRipple :: UploadRippleRequest -> ClientM RippleUuid
 clientUploadRipple upload = do
   boundary <- liftIO genBoundary
   clientUploadRippleRaw (boundary, upload)
+
+clientListRipples :: Coordinates -> ClientM [RippleSummary]
+clientListRipples Coordinates {..} = clientListRipplesRaw (Just coordinatesLat) (Just coordinatesLon)

@@ -20,7 +20,7 @@ import Data.GenValidity.ByteString ()
 import Data.GenValidity.Text ()
 import Data.GenValidity.UUID.Typed ()
 import Data.List
-import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema, ToSchema (..), binarySchema)
+import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), binarySchema)
 import Data.Proxy
 import Data.Text (Text)
 import Data.Typeable
@@ -91,7 +91,8 @@ instance GenValid UploadRippleRequest
 
 type ListRipples =
   "list"
-    :> ReqBody '[JSON] Coordinates
+    :> QueryParam "latitude" Latitude
+    :> QueryParam "longitude" Longitude
     :> Get '[JSON] [RippleSummary]
 
 data RippleSummary = RippleSummary
@@ -156,3 +157,10 @@ type RippleUuid = UUID RippleSummary
 deriving via (Autodocodec RippleUuid) instance Typeable tag => OpenApi.ToSchema (UUID tag)
 
 instance Typeable tag => OpenApi.ToParamSchema (UUID tag)
+
+instance OpenApi.ToParamSchema Coord where
+  toParamSchema Proxy = toParamSchema (Proxy :: Proxy Double)
+
+instance OpenApi.ToParamSchema Longitude
+
+instance OpenApi.ToParamSchema Latitude

@@ -64,15 +64,26 @@
     "paths": {
         "/list": {
             "get": {
-                "requestBody": {
-                    "content": {
-                        "application/json;charset=utf-8": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Coordinates"
-                            }
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "latitude",
+                        "required": false,
+                        "schema": {
+                            "format": "double",
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "longitude",
+                        "required": false,
+                        "schema": {
+                            "format": "double",
+                            "type": "number"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "content": {
@@ -88,7 +99,7 @@
                         "description": ""
                     },
                     "400": {
-                        "description": "Invalid `body`"
+                        "description": "Invalid `longitude` or `latitude`"
                     }
                 }
             }

@@ -69,6 +69,7 @@ import Database.Persist.Sql
 import GHC.Generics (Generic)
 import Test.QuickCheck (choose, suchThatMap)
 import Text.Read
+import Web.HttpApiData
 import Web.PathPieces
 
 data E5
@@ -198,6 +199,12 @@ instance PersistField Latitude where
 instance PersistFieldSql Latitude where
   sqlType Proxy = sqlType (Proxy :: Proxy Coord)
 
+instance ToHttpApiData Latitude where
+  toUrlPiece = renderCoord . unLatitude
+
+instance FromHttpApiData Latitude where
+  parseUrlPiece = fmap Latitude . left T.pack . parseCoordOrError
+
 latitudeToFloat :: RealFloat f => Latitude -> f
 latitudeToFloat = realToFrac . unLatitude
 
@@ -257,6 +264,12 @@ instance Bounded Longitude where
 
 instance HasCodec Longitude where
   codec = bimapCodec mkLongitudeOrError unLongitude codec
+
+instance ToHttpApiData Longitude where
+  toUrlPiece = renderCoord . unLongitude
+
+instance FromHttpApiData Longitude where
+  parseUrlPiece = fmap Longitude . left T.pack . parseCoordOrError
 
 longitudeToFloat :: RealFloat f => Longitude -> f
 longitudeToFloat = realToFrac . unLongitude

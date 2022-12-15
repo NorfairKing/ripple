@@ -28,7 +28,9 @@ library:
   - genvalidity
   - genvalidity-bytestring
   - genvalidity-text
+  - genvalidity-typed-uuid
   - hashable
+  - http-api-data
   - monad-logger
   - mtl
   - openapi3
@@ -43,12 +45,11 @@ library:
   - servant-multipart-client
   - servant-server
   - text
+  - typed-uuid
+  - uuid
   - validity
   - wai
   - wai-extra
-  - genvalidity-typed-uuid
-  - typed-uuid
-  - uuid
   - warp
 
 executables:

@@ -34,6 +34,7 @@ library
     , genvalidity-text
     , genvalidity-typed-uuid
     , hashable
+    , http-api-data
     , monad-logger
     , mtl
     , openapi3
