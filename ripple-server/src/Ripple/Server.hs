@@ -112,4 +112,18 @@ serveGetRipple uuid = do
     Just (Entity _ ripple) -> pure $ RippleContent $ rippleContents ripple
 
 serveReRipple :: ReRippleRequest -> H RippleUuid
-serveReRipple _ = pure exampleUuid
+serveReRipple ReRippleRequest {..} = do
+  mRipple <- runDB $ getBy $ UniqueRippleUuid reRippleRequestId
+  case mRipple of
+    Nothing -> throwError err404
+    Just (Entity _ ripple) -> do
+      uuid <- nextRandomUUID
+      now <- liftIO getCurrentTime
+      let newRipple =
+            ripple
+              { rippleUuid = uuid,
+                rippleCreated = now,
+                rippleOriginal = Just $ rippleUuid ripple
+              }
+      runDB $ insert_ newRipple
+      pure exampleUuid
