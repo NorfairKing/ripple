@@ -105,7 +105,11 @@ serveListRipples mLat mLon =
         ]
 
 serveGetRipple :: RippleUuid -> H RippleContent
-serveGetRipple _ = pure $ RippleContent mempty
+serveGetRipple uuid = do
+  mRipple <- runDB $ getBy $ UniqueRippleUuid uuid
+  case mRipple of
+    Nothing -> throwError err404
+    Just (Entity _ ripple) -> pure $ RippleContent $ rippleContents ripple
 
 serveReRipple :: ReRippleRequest -> H RippleUuid
 serveReRipple _ = pure exampleUuid
