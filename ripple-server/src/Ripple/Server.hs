@@ -9,6 +9,7 @@ import Control.Monad.Logger
 import Control.Monad.Reader
 import Data.Coordinates
 import Data.Maybe
+import Data.Time
 import Data.UUID.Typed as UUID
 import Database.Persist.Sqlite
 import Network.Wai as Wai
@@ -56,6 +57,11 @@ data Env = Env
     envLogFunc :: !(Loc -> LogSource -> LogLevel -> LogStr -> IO ())
   }
 
+runDB :: SqlPersistM a -> H a
+runDB query = do
+  pool <- asks envConnectionPool
+  liftIO $ runSqlPersistMPool (retryOnBusy query) pool
+
 rippleServer :: ServerT RippleAPI H
 rippleServer =
   serveUploadRipple
@@ -74,7 +80,17 @@ exampleCoordinates =
     }
 
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
-serveUploadRipple _ = pure exampleUuid
+serveUploadRipple UploadRippleRequest {..} = do
+  rippleUuid <- nextRandomUUID
+  let rippleType = uploadRippleRequestFileType
+  let rippleContents = unRippleContent uploadRippleRequestFileContents
+  let Coordinates {..} = uploadRippleRequestCoordinates
+      rippleLatitude = coordinatesLat
+      rippleLongitude = coordinatesLon
+  let rippleOriginal = Nothing
+  rippleCreated <- liftIO getCurrentTime
+  runDB $ insert_ Ripple {..}
+  pure rippleUuid
 
 serveListRipples :: Maybe Latitude -> Maybe Longitude -> H [RippleSummary]
 serveListRipples mLat mLon =

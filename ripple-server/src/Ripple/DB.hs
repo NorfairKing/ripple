@@ -22,6 +22,7 @@ import Control.DeepSeq
 import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as LB
+import Data.Coordinates
 import Data.GenValidity
 import Data.GenValidity.ByteString
 import Data.GenValidity.Persist ()
@@ -57,7 +58,14 @@ share
 Ripple sql=ripple
     -- UUID, for external usage
     uuid RippleUuid
+
+    type Text
     contents ByteString
+
+    latitude Latitude
+    longitude Longitude
+
+    original RippleUuid Maybe -- The original ripple, if it's a re-ripple
 
     created UTCTime
 
