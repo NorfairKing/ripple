@@ -22,8 +22,6 @@ import Data.List
 import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), binarySchema)
 import Data.Proxy
 import Data.Text (Text)
-import Data.Typeable
-import Data.UUID.Typed
 import GHC.Generics (Generic)
 import Ripple.DB
 import Servant.API

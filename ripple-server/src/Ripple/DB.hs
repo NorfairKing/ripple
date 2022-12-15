@@ -19,23 +19,18 @@ module Ripple.DB where
 import Autodocodec
 import Autodocodec.OpenAPI ()
 import Control.DeepSeq
-import Control.Monad
 import Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as LB
 import Data.Coordinates
 import Data.GenValidity
-import Data.GenValidity.ByteString
+import Data.GenValidity.ByteString ()
 import Data.GenValidity.Persist ()
 import Data.GenValidity.Text ()
 import Data.GenValidity.Time ()
 import Data.GenValidity.UUID.Typed ()
-import Data.List.NonEmpty (NonEmpty)
-import qualified Data.List.NonEmpty as NE
-import Data.Maybe
-import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), binarySchema)
+import Data.OpenApi as OpenApi (ToParamSchema (..), ToSchema (..))
 import Data.Proxy
 import Data.Text (Text)
-import qualified Data.Text as T
 import Data.Time
 import Data.Typeable
 import qualified Data.UUID as UUID
@@ -66,6 +61,7 @@ Ripple sql=ripple
     longitude Longitude
 
     original RippleUuid Maybe -- The original ripple, if it's a re-ripple
+    parent RippleUuid Maybe -- The parent ripple, if it's a re-ripple
 
     created UTCTime
 
@@ -106,3 +102,9 @@ instance PersistFieldSql (UUID a) where
 instance PathPiece (UUID a) where
   fromPathPiece = parseUUIDText
   toPathPiece = uuidText
+
+rippleCoordinates :: Ripple -> Coordinates
+rippleCoordinates Ripple {..} =
+  let coordinatesLat = rippleLatitude
+      coordinatesLon = rippleLongitude
+   in Coordinates {..}

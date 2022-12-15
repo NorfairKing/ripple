@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE NumericUnderscores #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
@@ -8,7 +9,7 @@ import Control.Monad.Except
 import Control.Monad.Logger
 import Control.Monad.Reader
 import Data.Coordinates
-import Data.Maybe
+import Data.List
 import Data.Time
 import Data.UUID.Typed as UUID
 import Database.Persist.Sqlite
@@ -69,16 +70,6 @@ rippleServer =
     :<|> serveGetRipple
     :<|> serveReRipple
 
-exampleUuid :: RippleUuid
-exampleUuid = fromJust $ UUID.parseUUIDString "70316487-345c-449e-a390-b0406b9292a9"
-
-exampleCoordinates :: Coordinates
-exampleCoordinates =
-  Coordinates
-    { coordinatesLat = Latitude 0,
-      coordinatesLon = Longitude 0
-    }
-
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
 serveUploadRipple UploadRippleRequest {..} = do
   rippleUuid <- nextRandomUUID
@@ -88,6 +79,7 @@ serveUploadRipple UploadRippleRequest {..} = do
       rippleLatitude = coordinatesLat
       rippleLongitude = coordinatesLon
   let rippleOriginal = Nothing
+  let rippleParent = Nothing
   rippleCreated <- liftIO getCurrentTime
   runDB $ insert_ Ripple {..}
   pure rippleUuid
@@ -96,13 +88,21 @@ serveListRipples :: Maybe Latitude -> Maybe Longitude -> H [RippleSummary]
 serveListRipples mLat mLon =
   case Coordinates <$> mLat <*> mLon of
     Nothing -> throwError err400
-    Just coordinates ->
-      pure
-        [ RippleSummary
-            { rippleSummaryId = exampleUuid,
-              rippleSummaryCoordinates = coordinates
-            }
-        ]
+    Just coordinates -> do
+      now <- liftIO getCurrentTime
+      let oldestRelevant = addUTCTime (-nominalDay) now
+      ripples <- runDB $ selectList [RippleCreated >=. oldestRelevant] []
+      pure $
+        map
+          ( \ripple ->
+              let rippleSummaryId = rippleUuid ripple
+                  rippleSummaryCoordinates = rippleCoordinates ripple
+               in RippleSummary {..}
+          )
+          . nubBy
+            (\r1 r2 -> ((==) <$> rippleOriginal r1 <*> rippleOriginal r2) == Just True)
+          . filter (\r -> rippleCoordinates r `distanceTo` coordinates <= 1_000_000) -- 1000 km
+          $ map entityVal ripples
 
 serveGetRipple :: RippleUuid -> H RippleContent
 serveGetRipple uuid = do
@@ -123,7 +123,7 @@ serveReRipple ReRippleRequest {..} = do
             ripple
               { rippleUuid = uuid,
                 rippleCreated = now,
-                rippleOriginal = Just $ rippleUuid ripple
+                rippleParent = Just $ rippleUuid ripple
               }
       runDB $ insert_ newRipple
-      pure exampleUuid
+      pure uuid
