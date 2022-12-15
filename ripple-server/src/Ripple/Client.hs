@@ -8,6 +8,7 @@ import Control.Monad.IO.Class
 import qualified Data.ByteString.Lazy as LB
 import Data.Coordinates
 import Ripple.API
+import Ripple.DB
 import Servant.API
 import Servant.Client
 import Servant.Multipart.Client

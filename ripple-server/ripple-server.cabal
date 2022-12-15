@@ -15,6 +15,7 @@ library
       Data.Coordinates
       Ripple.API
       Ripple.Client
+      Ripple.DB
       Ripple.Server
   other-modules:
       Paths_ripple_server
@@ -31,7 +32,9 @@ library
     , deepseq
     , genvalidity
     , genvalidity-bytestring
+    , genvalidity-persistent
     , genvalidity-text
+    , genvalidity-time
     , genvalidity-typed-uuid
     , hashable
     , http-api-data
@@ -49,6 +52,7 @@ library
     , servant-multipart-client
     , servant-server
     , text
+    , time
     , typed-uuid
     , uuid
     , validity

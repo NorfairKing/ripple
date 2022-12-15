@@ -27,7 +27,9 @@ library:
   - deepseq
   - genvalidity
   - genvalidity-bytestring
+  - genvalidity-persistent
   - genvalidity-text
+  - genvalidity-time
   - genvalidity-typed-uuid
   - hashable
   - http-api-data
@@ -45,6 +47,7 @@ library:
   - servant-multipart-client
   - servant-server
   - text
+  - time
   - typed-uuid
   - uuid
   - validity

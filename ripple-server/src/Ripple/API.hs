@@ -4,7 +4,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -26,6 +25,7 @@ import Data.Text (Text)
 import Data.Typeable
 import Data.UUID.Typed
 import GHC.Generics (Generic)
+import Ripple.DB
 import Servant.API
 import Servant.Multipart
 import Servant.Multipart.API
@@ -151,12 +151,6 @@ instance HasCodec ReRippleRequest where
       ReRippleRequest
         <$> requiredField "coordinates" "coordinates from where to re-ripple" .= reRippleRequestCoordinates
         <*> requiredField "id" "identifier of the ripple" .= reRippleRequestId
-
-type RippleUuid = UUID RippleSummary
-
-deriving via (Autodocodec RippleUuid) instance Typeable tag => OpenApi.ToSchema (UUID tag)
-
-instance Typeable tag => OpenApi.ToParamSchema (UUID tag)
 
 instance OpenApi.ToParamSchema Coord where
   toParamSchema Proxy = toParamSchema (Proxy :: Proxy Double)

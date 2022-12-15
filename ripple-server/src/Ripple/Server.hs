@@ -14,6 +14,7 @@ import Database.Persist.Sqlite
 import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
 import Ripple.API
+import Ripple.DB
 import Servant
 
 rippleServerMain :: IO ()
@@ -22,6 +23,7 @@ rippleServerMain = do
     filterLogger (\_ ll -> ll >= LevelDebug) $
       withSqlitePool "ripple-server.sqlite3" 1 $ \pool -> do
         let envConnectionPool = pool
+        runSqlPool (runMigration automaticMigrations) pool
         envLogFunc <- askLoggerIO
         let env = Env {..}
         let application = makeRippleApplication env

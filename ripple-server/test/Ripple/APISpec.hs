@@ -16,6 +16,7 @@ import Data.Proxy
 import Data.Text (Text)
 import Network.HTTP.Media (MediaType, (//))
 import Ripple.API
+import Ripple.DB
 import Servant.API ((:>))
 import Servant.Multipart
 import Servant.OpenApi

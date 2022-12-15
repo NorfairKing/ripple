@@ -5,6 +5,7 @@ module Ripple.Server.TestUtils (rippleServerSpec) where
 
 import Network.HTTP.Client as HTTP
 import Ripple.API
+import Ripple.DB
 import Ripple.Server
 import Servant.Client
 import Test.Syd
@@ -24,6 +25,6 @@ rippleClientEnvSetupFunc man = do
 
 envSetupFunc :: SetupFunc Env
 envSetupFunc = do
-  envConnectionPool <- connectionPoolSetupFunc (pure ())
+  envConnectionPool <- connectionPoolSetupFunc automaticMigrations
   let envLogFunc _ _ _ _ = pure ()
   pure Env {..}
