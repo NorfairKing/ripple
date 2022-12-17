@@ -29,7 +29,7 @@ rippleServerMain = do
         envLogFunc <- askLoggerIO
         let env = Env {..}
         let application = makeRippleApplication env
-        liftIO $ Warp.run 8000 application
+        liftIO $ Warp.run 9701 application
 
 makeRippleApplication :: Env -> Wai.Application
 makeRippleApplication env = serve rippleAPI (makeRippleServer env)
