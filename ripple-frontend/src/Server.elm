@@ -1,50 +1,27 @@
 module Server exposing (imgUrl, list, reRipple, upload)
 
 import Coordinates exposing (Coordinates)
-import Url exposing (Url)
+import Url.Builder exposing (relative, string)
 
 
-baseUrl : Url
-baseUrl =
-    -- { protocol = Url.Https
-    -- , host = "ripple.cs-syd.eu"
-    -- , port_ = Nothing
-    -- , path = ""
-    -- , query = Nothing
-    -- , fragment = Nothing
-    -- }
-    { protocol = Url.Http
-    , host = "localhost"
-    , port_ = Just 9701
-    , path = ""
-    , query = Nothing
-    , fragment = Nothing
-    }
-
-
-list : Coordinates -> Url
+list : Coordinates -> String
 list coords =
-    { baseUrl
-        | path = "/list"
-        , query =
-            Just <|
-                "latitude="
-                    ++ String.fromFloat coords.latitude
-                    ++ "&longitude="
-                    ++ String.fromFloat coords.longitude
-    }
+    relative [ "list" ]
+        [ string "latitude" <| String.fromFloat coords.latitude
+        , string "longitude" <| String.fromFloat coords.longitude
+        ]
 
 
-imgUrl : String -> Url
+imgUrl : String -> String
 imgUrl imgID =
-    { baseUrl | path = "/ripple/" ++ imgID }
+    relative [ "ripple", imgID ] []
 
 
-upload : Url
+upload : String
 upload =
-    { baseUrl | path = "/upload" }
+    relative [ "upload" ] []
 
 
-reRipple : Url
+reRipple : String
 reRipple =
-    { baseUrl | path = "/re-ripple" }
+    relative [ "re-ripple" ] []

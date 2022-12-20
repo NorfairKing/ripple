@@ -13,7 +13,6 @@ import Material.Fab as Fab
 import Maybe.Extra as Maybe
 import Server
 import Task
-import Url
 
 
 type alias ImagePreviewUrl =
@@ -60,7 +59,7 @@ update location msg model =
         Upload image ->
             ( Closed
             , Http.post
-                { url = Url.toString Server.upload
+                { url = Server.upload
                 , body =
                     Http.multipartBody
                         [ Http.stringPart "latitude" <| String.fromFloat location.latitude
