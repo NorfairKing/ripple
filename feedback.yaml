@@ -1,6 +1,9 @@
 loops:
   test:
+    description: "Test the backend"
     script: |
       cd ripple-server
       hpack
+      nix build .#frontend --out-link result-ripple-frontend
+      export RIPPLE_FRONTEND=result-ripple-frontend
       cabal test all --test-options="--golden-start --golden-reset"
