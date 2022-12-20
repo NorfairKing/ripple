@@ -23,8 +23,10 @@ library:
   - aeson
   - autodocodec
   - autodocodec-openapi3
+  - blaze-html
   - bytestring
   - deepseq
+  - file-embed
   - genvalidity
   - genvalidity-bytestring
   - genvalidity-persistent
@@ -33,6 +35,7 @@ library:
   - genvalidity-typed-uuid
   - hashable
   - http-api-data
+  - http-media
   - monad-logger
   - mtl
   - openapi3
@@ -46,6 +49,7 @@ library:
   - servant-multipart-api
   - servant-multipart-client
   - servant-server
+  - template-haskell
   - text
   - time
   - typed-uuid

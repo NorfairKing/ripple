@@ -19,18 +19,44 @@ import Data.GenValidity.ByteString ()
 import Data.GenValidity.Text ()
 import Data.GenValidity.UUID.Typed ()
 import Data.List
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), binarySchema)
 import Data.Proxy
 import Data.Text (Text)
+import Data.Typeable
 import GHC.Generics (Generic)
+import qualified Network.HTTP.Media as M
 import Ripple.DB
 import Servant.API
 import Servant.Multipart
 import Servant.Multipart.API
 
+completeAPI :: Proxy CompleteAPI
+completeAPI = Proxy
+
+type CompleteAPI = HtmlAPI :<|> RippleAPI
+
+type HtmlAPI = Home
+
+data HTML deriving (Typeable)
+
+-- | @text/html;charset=utf-8@
+instance Accept HTML where
+  contentTypes _ =
+    "text" M.// "html" M./: ("charset", "utf-8")
+      :| ["text" M.// "html"]
+
+instance MimeRender HTML ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type Home = Get '[HTML] ByteString
+
 rippleAPI :: Proxy RippleAPI
 rippleAPI = Proxy
 
+-- | A separate API for only the parts we contact from the frontend
+-- The home route can't be in here because there is no MimeUnrender for html:
+-- https://github.com/haskell-servant/servant-blaze/issues/15
 type RippleAPI =
   UploadRipple
     :<|> ListRipples

@@ -16,6 +16,8 @@ library
       Ripple.API
       Ripple.Client
       Ripple.DB
+      Ripple.Frontend
+      Ripple.Frontend.TH
       Ripple.Server
   other-modules:
       Paths_ripple_server
@@ -28,8 +30,10 @@ library
     , autodocodec
     , autodocodec-openapi3
     , base >=4.7 && <5
+    , blaze-html
     , bytestring
     , deepseq
+    , file-embed
     , genvalidity
     , genvalidity-bytestring
     , genvalidity-persistent
@@ -38,6 +42,7 @@ library
     , genvalidity-typed-uuid
     , hashable
     , http-api-data
+    , http-media
     , monad-logger
     , mtl
     , openapi3
@@ -51,6 +56,7 @@ library
     , servant-multipart-api
     , servant-multipart-client
     , servant-server
+    , template-haskell
     , text
     , time
     , typed-uuid

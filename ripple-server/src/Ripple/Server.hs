@@ -8,6 +8,8 @@ module Ripple.Server where
 import Control.Monad.Except
 import Control.Monad.Logger
 import Control.Monad.Reader
+import Data.ByteString (ByteString)
+import qualified Data.ByteString as SB
 import Data.Coordinates
 import Data.List
 import Data.Time
@@ -17,6 +19,7 @@ import Network.Wai as Wai
 import Network.Wai.Handler.Warp as Warp (run)
 import Ripple.API
 import Ripple.DB
+import Ripple.Frontend
 import Servant
 
 rippleServerMain :: IO ()
@@ -32,12 +35,12 @@ rippleServerMain = do
         liftIO $ Warp.run 9701 application
 
 makeRippleApplication :: Env -> Wai.Application
-makeRippleApplication env = serve rippleAPI (makeRippleServer env)
+makeRippleApplication env = serve completeAPI (makeRippleServer env)
 
 {-# ANN makeRippleServer ("NOCOVER" :: String) #-}
-makeRippleServer :: Env -> Server RippleAPI
+makeRippleServer :: Env -> Server CompleteAPI
 makeRippleServer env =
-  hoistServer rippleAPI (runH env) rippleServer
+  hoistServer completeAPI (runH env) rippleServer
 
 runH :: Env -> H a -> Handler a
 runH env func = runReaderT (unH func) env
@@ -63,12 +66,16 @@ runDB query = do
   pool <- asks envConnectionPool
   liftIO $ runSqlPersistMPool (retryOnBusy query) pool
 
-rippleServer :: ServerT RippleAPI H
+rippleServer :: ServerT CompleteAPI H
 rippleServer =
-  serveUploadRipple
+  serveHome
+    :<|> serveUploadRipple
     :<|> serveListRipples
     :<|> serveGetRipple
     :<|> serveReRipple
+
+serveHome :: H ByteString
+serveHome = liftIO $ SB.readFile frontendHome
 
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
 serveUploadRipple UploadRippleRequest {..} = do
