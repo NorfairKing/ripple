@@ -34,9 +34,13 @@ import Servant.Multipart.API
 completeAPI :: Proxy CompleteAPI
 completeAPI = Proxy
 
-type CompleteAPI = HtmlAPI :<|> RippleAPI
+type CompleteAPI = FrontendAPI :<|> RippleAPI
 
-type HtmlAPI = Home
+type FrontendAPI =
+  IndexHtml
+    :<|> AppJs
+    :<|> StyleCSS
+    :<|> SiteWebmanifest
 
 data HTML deriving (Typeable)
 
@@ -49,7 +53,40 @@ instance Accept HTML where
 instance MimeRender HTML ByteString where
   mimeRender Proxy = LB.fromStrict
 
-type Home = Get '[HTML] ByteString
+type IndexHtml = Get '[HTML] ByteString
+
+data JS deriving (Typeable)
+
+-- | @text/javascript
+instance Accept JS where
+  contentTypes _ = "text" M.// "javascript" :| []
+
+instance MimeRender JS ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type AppJs = "app.js" :> Get '[JS] ByteString
+
+data CSS deriving (Typeable)
+
+-- | @text/css
+instance Accept CSS where
+  contentTypes _ = "text" M.// "css" :| []
+
+instance MimeRender CSS ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type StyleCSS = "style.css" :> Get '[CSS] ByteString
+
+data Webmanifest deriving (Typeable)
+
+-- | @application/manifest+json
+instance Accept Webmanifest where
+  contentTypes _ = "application" M.// "manifest+json" :| []
+
+instance MimeRender Webmanifest ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type SiteWebmanifest = "site.webmanifest" :> Get '[Webmanifest] ByteString
 
 rippleAPI :: Proxy RippleAPI
 rippleAPI = Proxy

@@ -40,7 +40,7 @@ with final.haskell.lib;
                 # Show test output as we go, instead of all at once afterwards.
                 testTarget = (old.testTarget or "") + " --show-details=direct";
                 preConfigure = (old.preConfigure or "") + ''
-                  export RIPPLE_FRONTEND=${final.ripple-frontend}
+                  export RIPPLE_FRONTEND="${final.ripple-frontend}"
                 '';
               }));
 

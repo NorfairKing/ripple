@@ -150,7 +150,7 @@ viewOptionsDialog ripple =
                 "Cancel"
             , Button.text
                 (Button.config |> Button.setOnClick (UnRipple ripple))
-                "Delete"
+                "Ignore"
             , Button.text
                 (Button.config
                     |> Button.setOnClick (ReRipple ripple)

@@ -23,17 +23,15 @@ library
       Paths_ripple_server
   hs-source-dirs:
       src
-  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages
   build-depends:
       QuickCheck
     , aeson
     , autodocodec
     , autodocodec-openapi3
     , base >=4.7 && <5
-    , blaze-html
     , bytestring
     , deepseq
-    , file-embed
     , genvalidity
     , genvalidity-bytestring
     , genvalidity-persistent
@@ -49,7 +47,6 @@ library
     , path-pieces
     , persistent
     , persistent-sqlite
-    , persistent-template
     , servant
     , servant-client
     , servant-multipart
@@ -61,9 +58,7 @@ library
     , time
     , typed-uuid
     , uuid
-    , validity
     , wai
-    , wai-extra
     , warp
   default-language: Haskell2010
 
@@ -73,7 +68,7 @@ executable ripple-server
       Paths_ripple_server
   hs-source-dirs:
       app
-  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , ripple-server
@@ -91,19 +86,16 @@ test-suite ripple-server-test
       Paths_ripple_server
   hs-source-dirs:
       test
-  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -Wunused-packages -threaded -rtsopts -with-rtsopts=-N
   build-tool-depends:
       sydtest-discover:sydtest-discover
   build-depends:
-      autodocodec-openapi3
-    , base >=4.7 && <5
-    , bytestring
+      base >=4.7 && <5
     , genvalidity-sydtest
     , genvalidity-sydtest-aeson
     , genvalidity-sydtest-persistent
     , http-client
     , http-media
-    , http-types
     , insert-ordered-containers
     , lens
     , openapi3
@@ -113,10 +105,8 @@ test-suite ripple-server-test
     , servant-client
     , servant-multipart
     , servant-openapi3
-    , servant-server
     , sydtest
     , sydtest-aeson
-    , sydtest-persistent
     , sydtest-persistent-sqlite
     , sydtest-servant
     , sydtest-wai

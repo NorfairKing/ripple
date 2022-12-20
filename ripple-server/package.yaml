@@ -15,6 +15,7 @@ ghc-options:
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
+- -Wunused-packages
 
 library:
   source-dirs: src
@@ -23,10 +24,8 @@ library:
   - aeson
   - autodocodec
   - autodocodec-openapi3
-  - blaze-html
   - bytestring
   - deepseq
-  - file-embed
   - genvalidity
   - genvalidity-bytestring
   - genvalidity-persistent
@@ -42,7 +41,6 @@ library:
   - path-pieces
   - persistent
   - persistent-sqlite
-  - persistent-template
   - servant
   - servant-client
   - servant-multipart
@@ -54,9 +52,7 @@ library:
   - time
   - typed-uuid
   - uuid
-  - validity
   - wai
-  - wai-extra
   - warp
 
 executables:
@@ -80,14 +76,11 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - autodocodec-openapi3
-    - bytestring
     - genvalidity-sydtest
     - genvalidity-sydtest-aeson
     - genvalidity-sydtest-persistent
     - http-client
     - http-media
-    - http-types
     - insert-ordered-containers
     - lens
     - openapi3
@@ -97,10 +90,8 @@ tests:
     - servant-client
     - servant-multipart
     - servant-openapi3
-    - servant-server
     - sydtest
     - sydtest-aeson
-    - sydtest-persistent
     - sydtest-persistent-sqlite
     - sydtest-servant
     - sydtest-wai

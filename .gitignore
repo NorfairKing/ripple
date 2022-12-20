@@ -1,0 +1,3 @@
+dist-newstyle
+*.sqlite3*
+.pre-commit-config.yaml

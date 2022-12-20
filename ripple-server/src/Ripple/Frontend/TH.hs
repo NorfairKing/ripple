@@ -1,11 +1,9 @@
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE TemplateHaskellQuotes #-}
 
 module Ripple.Frontend.TH where
 
-import Data.ByteString (ByteString)
-import Data.FileEmbed
 import Language.Haskell.TH
-import Language.Haskell.TH.Syntax
 import System.Environment
 import System.Exit
 
@@ -15,9 +13,9 @@ frontendDir :: Q FilePath
 frontendDir = do
   md <- runIO $ lookupEnv "RIPPLE_FRONTEND"
   case md of
-    Nothing -> runIO $ die "WARNING: Building without dependency graph, set NIXOS_MODULE_DOCS to build them during development."
+    Nothing -> runIO $ die "Cannot build the backend without setting RIPPLE_FRONTEND"
     Just fp -> do
-      runIO $ putStrLn $ "Building with frontend graph at " <> fp
+      runIO $ putStrLn $ "Building with frontend at " <> fp
       pure fp
 
 frontendPath :: FilePath -> Q Exp

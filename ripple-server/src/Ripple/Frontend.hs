@@ -2,15 +2,18 @@
 
 module Ripple.Frontend where
 
-import Data.ByteString (ByteString)
-import Data.FileEmbed
-import Language.Haskell.TH
-import Language.Haskell.TH.Syntax
 import Ripple.Frontend.TH
-import System.Environment
-import System.Exit
 
 {-# ANN module "NOCOVER" #-}
 
 frontendHome :: FilePath
-frontendHome = $(frontendPath "Main.html")
+frontendHome = $(frontendPath "index.html")
+
+frontendApp :: FilePath
+frontendApp = $(frontendPath "Main.min.js")
+
+frontendStyle :: FilePath
+frontendStyle = $(frontendPath "css/styles.css")
+
+frontendWebmanifest :: FilePath
+frontendWebmanifest = $(frontendPath "site.webmanifest")

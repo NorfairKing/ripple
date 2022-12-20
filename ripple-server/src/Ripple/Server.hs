@@ -67,15 +67,33 @@ runDB query = do
   liftIO $ runSqlPersistMPool (retryOnBusy query) pool
 
 rippleServer :: ServerT CompleteAPI H
-rippleServer =
-  serveHome
-    :<|> serveUploadRipple
+rippleServer = frontendServer :<|> apiServer
+
+frontendServer :: ServerT FrontendAPI H
+frontendServer =
+  serveIndexHtml
+    :<|> serveAppJs
+    :<|> serveStyleCss
+    :<|> serveWebmanifest
+
+serveIndexHtml :: H ByteString
+serveIndexHtml = liftIO $ SB.readFile frontendHome
+
+serveAppJs :: H ByteString
+serveAppJs = liftIO $ SB.readFile frontendApp
+
+serveStyleCss :: H ByteString
+serveStyleCss = liftIO $ SB.readFile frontendStyle
+
+serveWebmanifest :: H ByteString
+serveWebmanifest = liftIO $ SB.readFile frontendWebmanifest
+
+apiServer :: ServerT RippleAPI H
+apiServer =
+  serveUploadRipple
     :<|> serveListRipples
     :<|> serveGetRipple
     :<|> serveReRipple
-
-serveHome :: H ByteString
-serveHome = liftIO $ SB.readFile frontendHome
 
 serveUploadRipple :: UploadRippleRequest -> H RippleUuid
 serveUploadRipple UploadRippleRequest {..} = do
