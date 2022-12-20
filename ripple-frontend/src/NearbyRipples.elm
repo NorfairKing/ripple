@@ -15,7 +15,6 @@ import Material.ImageList.Item as ImageListItem exposing (ImageListItem)
 import Maybe.Extra as Maybe
 import Ripple exposing (Ripple)
 import Server
-import Url
 
 
 type alias Model =
@@ -126,7 +125,7 @@ viewListElement ripple =
                 , onClick <| Select ripple
                 ]
         )
-        (Url.toString <| Server.imgUrl ripple.id)
+        (Server.imgUrl ripple.id)
 
 
 viewOptionsDialog : Ripple -> Html Msg
@@ -138,7 +137,7 @@ viewOptionsDialog ripple =
         )
         { content =
             [ img
-                [ src <| Url.toString <| Server.imgUrl ripple.id
+                [ src <| Server.imgUrl ripple.id
                 , style "max-height" "100%"
                 , style "max-width" "100%"
                 ]
@@ -164,7 +163,7 @@ viewOptionsDialog ripple =
 getList : (Result Http.Error (List Ripple) -> msg) -> Coordinates -> Cmd msg
 getList msg coords =
     Http.get
-        { url = Server.list coords |> Url.toString
+        { url = Server.list coords
         , expect = Http.expectJson msg (Decode.list Ripple.decoder)
         }
 
@@ -172,7 +171,7 @@ getList msg coords =
 reRipple : (Result Http.Error () -> msg) -> Coordinates -> Ripple -> Cmd msg
 reRipple msg currentCoords ripple =
     Http.post
-        { url = Server.reRipple |> Url.toString
+        { url = Server.reRipple
         , body =
             Http.jsonBody <|
                 Encode.object
