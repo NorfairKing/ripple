@@ -49,9 +49,13 @@
     in
     {
       overlays.${system} = import ./nix/overlay.nix;
-      packages.${system}.default = pkgs.ripple-server;
+      packages.${system} = {
+        backend = pkgs.ripple-server;
+        frontend = pkgs.ripple-frontend;
+      };
       checks.${system} = {
-        release = self.packages.${system}.default;
+        frontend = self.packages.${system}.backend;
+        backend = self.packages.${system}.frontend;
         shell = self.devShells.${system}.default;
         nixos-module-test = import ./nix/nixos-module-test.nix {
           inherit (pkgs) nixosTest;
@@ -72,6 +76,7 @@
             nixpkgs-fmt.enable = true;
             nixpkgs-fmt.excludes = [ ".*/default.nix" ];
             cabal2nix.enable = true;
+            elm-format.enable = true;
           };
         };
       };
@@ -81,17 +86,24 @@
         withHoogle = true;
         doBenchmark = true;
         buildInputs = with pkgs; [
-          pkgs.feedback
-          niv
-          zlib
           cabal-install
-        ] ++ (with pre-commit-hooks;
+          elm2nix
+          elmPackages.elm
+          elmPackages.elm-json # Install, upgrade and uninstall Elm dependencies
+          elmPackages.elm-live # a live server for development
+          niv
+          nodePackages.uglify-js # Further optimization of output on build
+          openapi-generator-cli
+          pkgs.feedback
+          zlib
+        ] ++ (with pre-commit-hooks.packages.${system};
           [
             hlint
             hpack
             nixpkgs-fmt
             ormolu
             cabal2nix
+            elm-format
           ]);
         shellHook = self.checks.${system}.pre-commit.shellHook + pkgs.feedback.shellHook;
       };

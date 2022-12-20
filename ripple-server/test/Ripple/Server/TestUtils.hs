@@ -21,7 +21,7 @@ rippleClientEnvSetupFunc :: HTTP.Manager -> SetupFunc ClientEnv
 rippleClientEnvSetupFunc man = do
   env <- envSetupFunc
   let server = makeRippleServer env
-  Servant.clientEnvSetupFunc rippleAPI man server
+  Servant.clientEnvSetupFunc completeAPI man server
 
 envSetupFunc :: SetupFunc Env
 envSetupFunc = do

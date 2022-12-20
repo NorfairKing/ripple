@@ -19,18 +19,81 @@ import Data.GenValidity.ByteString ()
 import Data.GenValidity.Text ()
 import Data.GenValidity.UUID.Typed ()
 import Data.List
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.OpenApi as OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), binarySchema)
 import Data.Proxy
 import Data.Text (Text)
+import Data.Typeable
 import GHC.Generics (Generic)
+import qualified Network.HTTP.Media as M
 import Ripple.DB
 import Servant.API
 import Servant.Multipart
 import Servant.Multipart.API
 
+completeAPI :: Proxy CompleteAPI
+completeAPI = Proxy
+
+type CompleteAPI = FrontendAPI :<|> RippleAPI
+
+type FrontendAPI =
+  IndexHtml
+    :<|> AppJs
+    :<|> StyleCSS
+    :<|> SiteWebmanifest
+
+data HTML deriving (Typeable)
+
+-- | @text/html;charset=utf-8@
+instance Accept HTML where
+  contentTypes _ =
+    "text" M.// "html" M./: ("charset", "utf-8")
+      :| ["text" M.// "html"]
+
+instance MimeRender HTML ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type IndexHtml = Get '[HTML] ByteString
+
+data JS deriving (Typeable)
+
+-- | @text/javascript
+instance Accept JS where
+  contentTypes _ = "text" M.// "javascript" :| []
+
+instance MimeRender JS ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type AppJs = "app.js" :> Get '[JS] ByteString
+
+data CSS deriving (Typeable)
+
+-- | @text/css
+instance Accept CSS where
+  contentTypes _ = "text" M.// "css" :| []
+
+instance MimeRender CSS ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type StyleCSS = "style.css" :> Get '[CSS] ByteString
+
+data Webmanifest deriving (Typeable)
+
+-- | @application/manifest+json
+instance Accept Webmanifest where
+  contentTypes _ = "application" M.// "manifest+json" :| []
+
+instance MimeRender Webmanifest ByteString where
+  mimeRender Proxy = LB.fromStrict
+
+type SiteWebmanifest = "site.webmanifest" :> Get '[Webmanifest] ByteString
+
 rippleAPI :: Proxy RippleAPI
 rippleAPI = Proxy
 
+-- | A separate API for only the parts we contact from the frontend
+-- The home route can't be in here because there is no MimeUnrender for html:
+-- https://github.com/haskell-servant/servant-blaze/issues/15
 type RippleAPI =
   UploadRipple
     :<|> ListRipples
