@@ -2,6 +2,7 @@ final: prev:
 with final.lib;
 with final.haskell.lib;
 {
+  ripple-frontend = import ../ripple-frontend/default.nix { pkgs = final; };
   ripple-server = justStaticExecutables final.haskellPackages.ripple-server;
 
   haskellPackages = prev.haskellPackages.override (old: {
@@ -38,6 +39,9 @@ with final.haskell.lib;
                 # Ugly hack because we can't just add flags to the 'test' invocation.
                 # Show test output as we go, instead of all at once afterwards.
                 testTarget = (old.testTarget or "") + " --show-details=direct";
+                preConfigure = (old.preConfigure or "") + ''
+                  export RIPPLE_FRONTEND=${final.ripple-frontend}
+                '';
               }));
 
           in

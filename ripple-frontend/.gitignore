@@ -1,0 +1,10 @@
+# elm-package generated files
+elm-stuff
+# builds
+bin
+public
+elm.js
+# elm-json updates
+elm-upgrade-*
+# VS Code
+.vscode
