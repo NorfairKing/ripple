@@ -34,7 +34,9 @@ import Servant.Multipart.API
 completeAPI :: Proxy CompleteAPI
 completeAPI = Proxy
 
-type CompleteAPI = FrontendAPI :<|> RippleAPI
+type CompleteAPI =
+  FrontendAPI
+    :<|> RippleAPI
 
 type FrontendAPI =
   IndexHtml

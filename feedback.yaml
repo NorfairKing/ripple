@@ -7,3 +7,18 @@ loops:
       nix build .#frontend --out-link result-ripple-frontend
       export RIPPLE_FRONTEND=result-ripple-frontend
       cabal test all --test-options="--golden-start --golden-reset"
+
+  backend:
+    description: Work on the backend
+    script: |
+      nix build .#frontend --out-link result-ripple-frontend
+      export RIPPLE_FRONTEND=result-ripple-frontend
+      killall ripple-server || true
+      cabal run ripple-server &
+    find: ripple-server
+
+  frontend:
+    description: Work on the frontend
+    script: |
+      nix build .#frontend --out-link result-ripple-frontend
+    find: ripple-frontend
