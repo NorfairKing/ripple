@@ -4,6 +4,7 @@ elm-stuff
 bin
 public
 elm.js
+app.js
 # elm-json updates
 elm-upgrade-*
 # VS Code
