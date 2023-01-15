@@ -11,4 +11,4 @@ build:
 
 live:
 	# Elm Live: https://github.com/wking-io/elm-live
-	elm-live src/Main.elm --open --hot --dir=src --start-page=index.html --port 8080 -- --output=src/app.js --debug
+	elm-live src/Main.elm --open --hot --dir=src --start-page=index.html --port 8080 --proxy-prefix=/ --proxy-host=http://localhost:9701/ -- --output=src/app.js --debug

@@ -16,9 +16,3 @@ loops:
       killall ripple-server || true
       cabal run ripple-server &
     find: ripple-server
-
-  frontend:
-    description: Work on the frontend
-    script: |
-      nix build .#frontend --out-link result-ripple-frontend
-    find: ripple-frontend
