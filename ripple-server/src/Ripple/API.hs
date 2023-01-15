@@ -36,7 +36,7 @@ completeAPI = Proxy
 
 type CompleteAPI =
   FrontendAPI
-    :<|> RippleAPI
+    :<|> ("api" :> RippleAPI)
 
 type FrontendAPI =
   IndexHtml
